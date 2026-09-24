@@ -1,0 +1,10 @@
+services:
+  leichimonitor:
+    build: .
+    image: leichimonitor:latest
+    container_name: leichimonitor
+    restart: unless-stopped
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./config.json:/app/config.json:ro

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>雷池 WAF 汇总监控</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">雷池</span>
+      <div>
+        <h1>WAF 汇总监控</h1>
+        <p id="subtitle" class="subtitle">加载中…</p>
+      </div>
+    </div>
+    <div class="controls">
+      <label class="field">
+        <span>自动刷新</span>
+        <select id="interval">
+          <option value="10000">10 秒</option>
+          <option value="15000" selected>15 秒</option>
+          <option value="30000">30 秒</option>
+          <option value="60000">60 秒</option>
+          <option value="0">关闭</option>
+        </select>
+      </label>
+      <button id="refresh" class="btn">立即刷新</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="alerts" class="alerts hidden"></section>
+
+    <section class="kpis" id="kpis"></section>
+
+    <section class="grid two">
+      <article class="panel">
+        <header class="panel-head">
+          <h2>请求量趋势</h2>
+          <span class="hint" id="access-window"></span>
+        </header>
+        <div class="chart" id="chart-access"></div>
+      </article>
+      <article class="panel">
+        <header class="panel-head">
+          <h2>攻击拦截趋势</h2>
+          <span class="hint" id="intercept-window"></span>
+        </header>
+        <div class="chart" id="chart-intercept"></div>
+      </article>
+    </section>
+
+    <section class="grid four">
+      <article class="panel">
+        <header class="panel-head"><h2>拦截类型分布</h2></header>
+        <div class="chart small" id="chart-intercept-type"></div>
+      </article>
+      <article class="panel">
+        <header class="panel-head"><h2>攻击类型 TOP</h2></header>
+        <div class="chart small" id="chart-attack-type"></div>
+      </article>
+      <article class="panel">
+        <header class="panel-head"><h2>来源地区 TOP</h2></header>
+        <div class="chart small" id="chart-location"></div>
+      </article>
+      <article class="panel">
+        <header class="panel-head">
+          <h2>响应状态码</h2>
+          <span class="hint">雷池社区版不返回该维度</span>
+        </header>
+        <div class="chart small" id="chart-status"></div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <header class="panel-head">
+        <h2>实例概览</h2>
+        <span class="hint">数据窗口与授权状况以雷池实际返回为准</span>
+      </header>
+      <div class="instances" id="instances"></div>
+    </section>
+
+    <section class="panel">
+      <header class="panel-head">
+        <h2>应用维度（今日）</h2>
+        <span class="hint" id="site-summary"></span>
+      </header>
+      <div class="table-wrap">
+        <table id="sites">
+          <thead>
+            <tr>
+              <th>应用</th>
+              <th>域名</th>
+              <th>端口</th>
+              <th>今日请求</th>
+              <th>今日拦截</th>
+              <th>拦截率</th>
+              <th>模式</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <header class="panel-head">
+        <h2>黑名单拦截日志</h2>
+        <span class="hint" id="blacklist-summary"></span>
+      </header>
+      <div class="table-wrap">
+        <table id="blacklist">
+          <thead>
+            <tr>
+              <th>时间</th>
+              <th>实例</th>
+              <th>源 IP</th>
+              <th>归属</th>
+              <th>目标</th>
+              <th>命中规则</th>
+              <th>动作</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <header class="panel-head">
+        <h2>频率限制日志</h2>
+        <span class="hint" id="ratelimit-summary"></span>
+      </header>
+      <div class="table-wrap">
+        <table id="ratelimit">
+          <thead>
+            <tr>
+              <th>时间</th>
+              <th>实例</th>
+              <th>源 IP</th>
+              <th>归属</th>
+              <th>目标应用</th>
+              <th>命中规则</th>
+              <th>触发阈值</th>
+              <th>处置</th>
+              <th>拦截请求数</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid two">
+      <article class="panel">
+        <header class="panel-head"><h2>最近攻击事件</h2></header>
+        <div class="table-wrap">
+          <table id="events">
+            <thead>
+              <tr>
+                <th>时间</th>
+                <th>实例</th>
+                <th>源 IP</th>
+                <th>归属</th>
+                <th>目标</th>
+                <th>动作</th>
+                <th>规则</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </article>
+      <article class="panel">
+        <header class="panel-head">
+          <h2>域名 / 浏览器 TOP</h2>
+          <span class="hint">雷池社区版不返回该维度</span>
+        </header>
+        <div class="chart small" id="chart-rank-mixed"></div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span id="footer-note">数据来自雷池开放接口 /stat 与 /open，采集频率可调</span>
+  </footer>
+
+  <script src="/vendor/echarts.min.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

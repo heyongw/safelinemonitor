@@ -1,0 +1,37 @@
+{
+  "listen": {
+    "host": "0.0.0.0",
+    "port": 8088
+  },
+  "range": "last1Day",
+  "refresh": {
+    "fastMs": 10000,
+    "slowMs": 60000,
+    "metaMs": 300000,
+    "timeoutMs": 10000,
+    "recordLimit": 20
+  },
+  "instances": [
+    {
+      "name": "雷池-01",
+      "baseUrl": "https://192.168.1.1:9443",
+      "token": "在此填写雷池控制台的 API Token",
+      "allowInsecureTls": true,
+      "enabled": true
+    },
+    {
+      "name": "雷池-02",
+      "baseUrl": "https://192.168.1.2:9443",
+      "token": "在此填写雷池控制台的 API Token",
+      "allowInsecureTls": true,
+      "enabled": true
+    },
+    {
+      "name": "雷池-03",
+      "baseUrl": "https://192.168.1.3:9443",
+      "token": "在此填写雷池控制台的 API Token",
+      "allowInsecureTls": true,
+      "enabled": true
+    }
+  ]
+}
